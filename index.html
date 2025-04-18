@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Ask Risk Calculator</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #ffffff;
+            --primary: #2b2b2b;
+            --accent: #f7931a;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        button {
+            background: var(--accent);
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .entry-group {
+            margin-bottom: 15px;
+        }
+
+        .results {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .nav-buttons {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h2>Средняя точка входа</h2>
+        <div id="entries">
+            <div class="entry-group">
+                <input type="number" step="0.0001" placeholder="Цена входа" class="entry-price">
+                <input type="number" step="0.0001" placeholder="Объем" class="entry-amount">
+            </div>
+            <div class="entry-group">
+                <input type="number" step="0.0001" placeholder="Цена входа" class="entry-price">
+                <input type="number" step="0.0001" placeholder="Объем" class="entry-amount">
+            </div>
+        </div>
+        <button onclick="addEntry()">+ Добавить точку входа</button>
+        <button onclick="calculateAverage()">Рассчитать</button>
+        <div class="results" id="averageResults"></div>
+    </div>
+
+    <div class="section">
+        <h2>Калькулятор риска</h2>
+        <select id="positionType">
+            <option value="long">Long</option>
+            <option value="short">Short</option>
+        </select>
+        <input type="number" id="deposit" placeholder="Депозит ($)">
+        <input type="number" id="riskPercent" placeholder="Риск (%)" step="0.1">
+        <input type="number" id="entryPrice" placeholder="Цена входа" step="0.0001">
+        <input type="number" id="stopLoss" placeholder="Стоп-лосс" step="0.0001">
+        <input type="number" id="takeProfit" placeholder="Тейк-профит (опционально)" step="0.0001">
+        <button onclick="calculateRisk()">Рассчитать</button>
+        <div class="results" id="riskResults"></div>
+    </div>
+
+    <div class="nav-buttons">
+        <button onclick="window.open('https://t.me/cryptoaskgroup')">Наш Telegram-канал</button>
+        <button onclick="window.open('https://partner.bybit.com/b/askcrypto')">Регистрация на Bybit</button>
+        <button onclick="showClubInfo()">Закрытый клуб</button>
+        <button onclick="showInstructions()">Инструкция</button>
+    </div>
+
+    <script>
+        // Калькулятор средней цены
+        function addEntry() {
+            const entries = document.getElementById('entries');
+            if (entries.children.length >= 5) return;
+            
+            const div = document.createElement('div');
+            div.className = 'entry-group';
+            div.innerHTML = `
+                <input type="number" step="0.0001" placeholder="Цена входа" class="entry-price">
+                <input type="number" step="0.0001" placeholder="Объем" class="entry-amount">
+            `;
+            entries.appendChild(div);
+        }
+
+        function calculateAverage() {
+            const prices = Array.from(document.getElementsByClassName('entry-price'));
+            const amounts = Array.from(document.getElementsByClassName('entry-amount'));
+            
+            let totalValue = 0;
+            let totalAmount = 0;
+            
+            for (let i = 0; i < prices.length; i++) {
+                const price = parseFloat(prices[i].value);
+                const amount = parseFloat(amounts[i].value);
+                
+                if (!isNaN(price) && !isNaN(amount)) {
+                    totalValue += price * amount;
+                    totalAmount += amount;
+                }
+            }
+            
+            if (totalAmount > 0) {
+                const avgPrice = totalValue / totalAmount;
+                document.getElementById('averageResults').innerHTML = `
+                    Средняя цена: $${avgPrice.toFixed(4)}<br>
+                    Общий объем: ${totalAmount.toFixed(4)}
+                `;
+            }
+        }
+
+        // Калькулятор риска
+        function calculateRisk() {
+            const deposit = parseFloat(document.getElementById('deposit').value);
+            const riskPercent = parseFloat(document.getElementById('riskPercent').value);
+            const entry = parseFloat(document.getElementById('entryPrice').value);
+            const stopLoss = parseFloat(document.getElementById('stopLoss').value);
+            const positionType = document.getElementById('positionType').value;
+            
+            if ([deposit, riskPercent, entry, stopLoss].some(isNaN)) return;
+            
+            const riskDollars = deposit * (riskPercent / 100);
+            let amount = 0;
+            
+            if (positionType === 'long') {
+                amount = riskDollars / (entry - stopLoss);
+            } else {
+                amount = riskDollars / (stopLoss - entry);
+            }
+            
+            let profit = '';
+            const takeProfit = parseFloat(document.getElementById('takeProfit').value);
+            if (!isNaN(takeProfit)) {
+                if (positionType === 'long') {
+                    profit = (takeProfit - entry) * amount;
+                } else {
+                    profit = (entry - takeProfit) * amount;
+                }
+                profit = `Потенциальная прибыль: $${profit.toFixed(2)}`;
+            }
+            
+            document.getElementById('riskResults').innerHTML = `
+                Риск: $${riskDollars.toFixed(2)}<br>
+                Объем сделки: ${amount.toFixed(4)} монет<br>
+                ${profit}
+            `;
+        }
+
+        // Вспомогательные функции
+        function showClubInfo() {
+            alert('Закрытый торговый клуб:\n\nУсловия вступления:\n- Депозит от $1000\n- Ежемесячная подписка $99\n\nНажмите "Вступить" для связи с менеджером');
+            Telegram.WebApp.openTelegramLink('tg://resolve?domain=cryptoask_manager');
+        }
+
+        function showInstructions() {
+            alert('Инструкция:\n\n1. Введите параметры сделки\n2. Нажмите "Рассчитать"\n3. Используйте результаты для торговли');
+        }
+
+        // Инициализация Telegram WebApp
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+    </script>
+</body>
+</html>
