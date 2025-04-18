@@ -105,7 +105,7 @@
     </div>
 
     <script>
-        // Калькулятор средней цены
+        // калькулятор средней цены
         function addEntry() {
             const entries = document.getElementById('entries');
             if (entries.children.length >= 5) return;
@@ -145,7 +145,7 @@
             }
         }
 
-        // Калькулятор риска
+        // калькулятор риска
         function calculateRisk() {
             const deposit = parseFloat(document.getElementById('deposit').value);
             const riskPercent = parseFloat(document.getElementById('riskPercent').value);
@@ -182,7 +182,7 @@
             `;
         }
 
-        // Вспомогательные функции
+        // вспомогательные функции
         function showClubInfo() {
             alert('Закрытый торговый клуб:\n\nУсловия вступления:\n- Депозит от $1000\n- Ежемесячная подписка $99\n\nНажмите "Вступить" для связи с менеджером');
             Telegram.WebApp.openTelegramLink('tg://resolve?domain=cryptoask_manager');
@@ -192,7 +192,7 @@
             alert('Инструкция:\n\n1. Введите параметры сделки\n2. Нажмите "Рассчитать"\n3. Используйте результаты для торговли');
         }
 
-        // Инициализация Telegram WebApp
+        // инициализация Telegram WebApp
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
     </script>
