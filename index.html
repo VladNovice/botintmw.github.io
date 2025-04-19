@@ -10,7 +10,8 @@
             --text: #00ff88;
             --primary: #1a1a1a;
             --accent: #00ff88;
-            --button-bg: #005f3a;
+            --gradient1: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            --gradient2: linear-gradient(135deg, #ff006e 0%, #ff7b00 100%);
         }
 
         body {
@@ -28,119 +29,151 @@
         }
 
         .header h1 {
-            color: var(--accent);
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            background: var(--gradient1);
+            background-clip: text;           /* стандартное свойство для совместимости */
+            -webkit-background-clip: text;   /* WebKit-префикс */
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            letter-spacing: -1px;
         }
 
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
+        .main-nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             margin-bottom: 30px;
-            flex-wrap: wrap;
         }
 
         .nav-button {
-            background: var(--button-bg);
-            border: 2px solid var(--accent);
+            background: var(--primary);
+            border: 2px solid #2a2a2a;
             color: var(--text);
-            padding: 15px 25px;
-            border-radius: 50px;
+            padding: 16px;
+            border-radius: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.3s;
-            flex: 1 1 auto;
-            min-width: 200px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
             justify-content: center;
         }
 
         .nav-button.active {
-            background: var(--accent);
-            color: var(--bg);
+            border-color: var(--accent);
+            background: linear-gradient(45deg, #005f3a, #002d1c);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
         }
 
         .nav-button:hover {
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            border-color: var(--accent);
         }
 
         .section {
             background: var(--primary);
-            border-radius: 15px;
+            border-radius: 16px;
             padding: 25px;
             margin-bottom: 20px;
             display: none;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .section.active {
             display: block;
-            animation: fadeIn 0.5s;
+            animation: fadeIn 0.4s ease-out;
         }
 
-        input, select, button {
-            background: #333;
-            color: white;
-            border: 1px solid #555;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 8px;
-            width: 100%;
-            font-size: 16px;
-        }
-
-        button {
-            background: var(--accent);
-            color: var(--bg);
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            flex: 1;
-        }
-
-        button:hover {
-            opacity: 0.9;
-        }
-
-        .entry-group {
-            margin-bottom: 20px;
+        .action-buttons {
             display: grid;
-            gap: 10px;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 25px;
         }
 
-        .results {
-            background: #002612;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-size: 1.1em;
+        .action-button {
+            background: var(--primary);
+            border: 2px solid #2a2a2a;
+            color: var(--text);
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            justify-content: center;
+            font-size: 14px;
         }
+
+        .action-button:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.15);
+        }
+
+        .action-button.telegram { color: #0088cc; border-color: #0088cc; }
+        .action-button.bybit { color: #ffcc00; border-color: #ffcc00; }
+        .action-button.club { color: #ff006e; border-color: #ff006e; }
+        .action-button.help { color: #00ccff; border-color: #00ccff; }
 
         .icon {
-            width: 24px;
-            height: 24px;
-        }
-
-        .calculate-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Остальные стили остаются практически без изменений */
+        input, select, button {
+            background: #1f1f1f;
+            color: white;
+            border: 1px solid #333;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        button.primary {
+            background: var(--gradient1);
+            color: var(--bg);
+            border: none;
+            padding: 16px;
+            font-weight: 600;
+        }
+
+        .results {
+            background: #002612;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 480px) {
+            .nav-button { font-size: 14px; padding: 12px; }
+            .action-button { font-size: 13px; }
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>CRYPTO ASK RISK CALCULATOR</h1>
-        <div class="nav-buttons">
+        <div class="main-nav">
             <button class="nav-button active" onclick="showSection('average')">
                 <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M13 3v7.84l4 1.66-4 1.66V21l10-8-10-8m-2 0L1 11l10 8v-7.84l-4-1.66 4-1.66V3z"/>
@@ -155,7 +188,6 @@
             </button>
         </div>
     </div>
-
     <div id="averageSection" class="section active">
         <div id="entries">
             <div class="entry-group">
@@ -185,14 +217,37 @@
         </div>
         <div class="results" id="riskResults"></div>
     </div>
+    <!-- Секции калькулятора остаются без изменений -->
 
-    <div class="nav-buttons">
-        <button onclick="window.open('https://t.me/cryptoaskgroup')">📢 Наш Telegram</button>
-        <button onclick="window.open('https://partner.bybit.com/b/askcrypto')">🚀 Bybit Регистрация</button>
-        <button onclick="showClubInfo()">🔒 Закрытый клуб</button>
-        <button onclick="showInstructions()">❓ Инструкция</button>
+    <div class="action-buttons">
+        <button class="action-button telegram" onclick="window.open('https://t.me/cryptoaskgroup')">
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.57-1.38-.92-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.03-.1.06-.22.01-.31-.06-.09-.18-.06-.39-.04-1.62.25-4.46.85-6.39 1.28-.59.13-1.13.13-1.65.04-.57-.1-1.01-.3-1.03-.64-.02-.34.38-.5 1.1-.76 4.69-1.68 7.42-2.54 8.71-3.05 3.33-1.3 4.03-1.52 4.48-1.52.1 0 .32.02.46.12.11.08.18.2.17.32z"/>
+            </svg>
+            Telegram
+        </button>
+        <button class="action-button bybit" onclick="window.open('https://partner.bybit.com/b/askcrypto')">
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.2 3.6c0-.3.2-.5.5-.5h2.9c.3 0 .5.2.5.5v5.2c0 .3-.2.5-.5.5H7.7c-.3 0-.5-.2-.5-.5V3.6zm6.6 0c0-.3.2-.5.5-.5h2.9c.3 0 .5.2.5.5v5.2c0 .3-.2.5-.5.5h-2.9c-.3 0-.5-.2-.5-.5V3.6zM3.6 13.8c0-.3.2-.5.5-.5h2.9c.3 0 .5.2.5.5v5.2c0 .3-.2.5-.5.5H4.1c-.3 0-.5-.2-.5-.5v-5.2zm6.6 0c0-.3.2-.5.5-.5h2.9c.3 0 .5.2.5.5v5.2c0 .3-.2.5-.5.5h-2.9c-.3 0-.5-.2-.5-.5v-5.2zm6.6 0c0-.3.2-.5.5-.5h2.9c.3 0 .5.2.5.5v5.2c0 .3-.2.5-.5.5h-2.9c-.3 0-.5-.2-.5-.5v-5.2z"/>
+            </svg>
+            Bybit
+        </button>
+        <button class="action-button club" onclick="showClubInfo()">
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1C8.14 1 5 4.14 5 8c0 3.47 3.18 6.32 6.47 7.02.17.03.35.05.53.05s.36-.02.53-.05C15.82 14.32 19 11.47 19 8c0-3.86-3.14-7-7-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                <path d="M12 21c-1.1 0-2-.9-2-2h4c0 1.1-.9 2-2 2zm6-6H6v-2h12v2z"/>
+            </svg>
+            Клуб
+        </button>
+        <button class="action-button help" onclick="showInstructions()">
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+            </svg>
+            Помощь
+        </button>
     </div>
 
+    <!-- JavaScript остается без изменений -->
     <script>
         // Переключение секций
         function showSection(sectionId) {
