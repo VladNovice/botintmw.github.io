@@ -5,183 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Ask Calculator</title>
     <style>
-    :root {
-        --bg: #0a0a0a;
-        --text: #00ff88;
-        --primary: #1a1a1a;
-        --accent: #00ff88;
-        --button-bg: #005f3a;
-    }
-
-    body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: 'Arial', sans-serif;
-        padding: 20px;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .header h1 {
-        color: var(--accent);
-        font-size: 2.5em;
-        margin-bottom: 20px;
-        text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-    }
-
-    .nav-buttons {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-        margin: 25px 0;
-        padding: 0 10px;
-    }
-
-    .nav-button {
-        background: linear-gradient(145deg, #002612, #00190d);
-        border: 1px solid var(--accent);
-        color: var(--accent);
-        padding: 18px 25px;
-        border-radius: 12px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        font-size: 0.95em;
-        min-height: 60px;
-        backdrop-filter: blur(4px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .nav-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0, 255, 136, 0.2);
-        background: linear-gradient(145deg, #003d1f, #002612);
-    }
-
-    .nav-button.active {
-        background: linear-gradient(145deg, #00ff88, #00cc6d);
-        color: var(--bg);
-        border-color: transparent;
-        box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
-    }
-
-    .nav-button.active .icon {
-        filter: brightness(0.3);
-    }
-
-    .icon {
-        width: 22px;
-        height: 22px;
-        transition: transform 0.3s ease;
-    }
-
-    .nav-button:hover .icon {
-        transform: scale(1.1);
-    }
-
-    .section {
-        background: var(--primary);
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 20px;
-        display: none;
-        border: 1px solid #004d2b;
-    }
-
-    .section.active {
-        display: block;
-        animation: fadeIn 0.5s;
-    }
-
-    input, select, button {
-        background: #333;
-        color: white;
-        border: 1px solid #555;
-        padding: 12px;
-        margin: 8px 0;
-        border-radius: 8px;
-        width: 100%;
-        font-size: 16px;
-        transition: all 0.3s ease;
-    }
-
-    input:focus, select:focus {
-        outline: none;
-        border-color: var(--accent);
-        box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
-    }
-
-    button {
-        background: var(--accent);
-        color: var(--bg);
-        border: none;
-        padding: 15px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    button:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-    }
-
-    .entry-group {
-        margin-bottom: 20px;
-        display: grid;
-        gap: 10px;
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .results {
-        background: #002612;
-        padding: 20px;
-        border-radius: 10px;
-        margin-top: 20px;
-        font-size: 1.1em;
-        border: 1px solid #004d2b;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 480px) {
-        .nav-buttons {
-            grid-template-columns: 1fr;
-            gap: 8px;
+        :root {
+            --bg: #0a0a0a;
+            --text: #00ff88;
+            --primary: #1a1a1a;
+            --accent: #00ff88;
+            --button-bg: #005f3a;
         }
-        
-        .nav-button {
-            padding: 16px 20px;
-            font-size: 0.9em;
-        }
-        
-        .icon {
-            width: 20px;
-            height: 20px;
-        }
-        
-        .header h1 {
-            font-size: 2em;
-        }
-        
-        .section {
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Arial', sans-serif;
             padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
         }
-    }
-</style>
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--accent);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-button {
+            background: var(--button-bg);
+            border: 2px solid var(--accent);
+            color: var(--text);
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .nav-button.active {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .nav-button:hover {
+            transform: scale(1.05);
+        }
+
+        .section {
+            background: var(--primary);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        input, select, button {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .entry-group {
+            margin-bottom: 20px;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .results {
+            background: #002612;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -236,21 +179,98 @@
     </div>
 
     <script>
-        // Навигация между секциями
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
+        // калькулятор средней цены
+        function addEntry() {
+            const entries = document.getElementById('entries');
+            if (entries.children.length >= 5) return;
             
-            document.getElementById(sectionId + 'Section').classList.add('active');
-            event.currentTarget.classList.add('active');
+            const div = document.createElement('div');
+            div.className = 'entry-group';
+            div.innerHTML = `
+                <input type="number" step="0.0001" placeholder="Цена входа" class="entry-price">
+                <input type="number" step="0.0001" placeholder="Объем" class="entry-amount">
+            `;
+            entries.appendChild(div);
         }
 
-        // Остальной код калькулятора остается без изменений
-        // ... (функции addEntry, calculateAverage, calculateRisk, showClubInfo и т.д.)
-        
-        // Инициализация Telegram WebApp
+        function calculateAverage() {
+            const prices = Array.from(document.getElementsByClassName('entry-price'));
+            const amounts = Array.from(document.getElementsByClassName('entry-amount'));
+            
+            let totalValue = 0;
+            let totalAmount = 0;
+            
+            for (let i = 0; i < prices.length; i++) {
+                const price = parseFloat(prices[i].value);
+                const amount = parseFloat(amounts[i].value);
+                
+                if (!isNaN(price) && !isNaN(amount)) {
+                    totalValue += price * amount;
+                    totalAmount += amount;
+                }
+            }
+            
+            if (totalAmount > 0) {
+                const avgPrice = totalValue / totalAmount;
+                document.getElementById('averageResults').innerHTML = `
+                    Средняя цена: $${avgPrice.toFixed(4)}<br>
+                    Общий объем: ${totalAmount.toFixed(4)}
+                `;
+            }
+        }
+
+        // калькулятор риска
+        function calculateRisk() {
+            const deposit = parseFloat(document.getElementById('deposit').value);
+            const riskPercent = parseFloat(document.getElementById('riskPercent').value);
+            const entry = parseFloat(document.getElementById('entryPrice').value);
+            const stopLoss = parseFloat(document.getElementById('stopLoss').value);
+            const positionType = document.getElementById('positionType').value;
+            
+            if ([deposit, riskPercent, entry, stopLoss].some(isNaN)) return;
+            
+            const riskDollars = deposit * (riskPercent / 100);
+            let amount = 0;
+            
+            if (positionType === 'long') {
+                amount = riskDollars / (entry - stopLoss);
+            } else {
+                amount = riskDollars / (stopLoss - entry);
+            }
+            
+            let profit = '';
+            const takeProfit = parseFloat(document.getElementById('takeProfit').value);
+            if (!isNaN(takeProfit)) {
+                if (positionType === 'long') {
+                    profit = (takeProfit - entry) * amount;
+                } else {
+                    profit = (entry - takeProfit) * amount;
+                }
+                profit = `Потенциальная прибыль: $${profit.toFixed(2)}`;
+            }
+            
+            document.getElementById('riskResults').innerHTML = `
+                Риск: $${riskDollars.toFixed(2)}<br>
+                Объем сделки: ${amount.toFixed(4)} монет<br>
+                ${profit}
+            `;
+        }
+
+        // вспомогательные функции
+        function showClubInfo() {
+            alert('Закрытый торговый клуб:\n\nУсловия вступления:\n- Депозит от $1000\n- Ежемесячная подписка $99\n\nНажмите "Вступить" для связи с менеджером');
+            Telegram.WebApp.openTelegramLink('tg://resolve?domain=cryptoask_manager');
+        }
+
+        function showInstructions() {
+            alert('Инструкция:\n\n1. Введите параметры сделки\n2. Нажмите "Рассчитать"\n3. Используйте результаты для торговли');
+        }
+
+        // инициализация Telegram WebApp
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
     </script>
 </body>
 </html>
+
+
