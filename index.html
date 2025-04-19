@@ -39,6 +39,7 @@
       font-size: 2.4rem;
       background: linear-gradient(var(--gradient-angle), var(--accent-start), var(--accent-end));
       -webkit-background-clip: text;
+      background-clip: text;  /* добавлено стандартное свойство */
       -webkit-text-fill-color: transparent;
       margin-bottom: 8px;
     }
@@ -243,20 +244,25 @@
     let entries = [];
 
     function addEntry() {
-      let price = parseFloat(document.querySelector('.entry-price').value);
-      let amount = parseFloat(document.querySelector('.entry-amount').value);
-
-      if (isNaN(price) || isNaN(amount)) {
-        alert('Пожалуйста, введите корректные данные.');
+      if (entries.length >= 5) {
+        alert('Максимальное количество точек входа - 5');
         return;
       }
 
-      // Добавление новой точки
+      const price = parseFloat(document.getElementById('newEntryPrice').value);
+      const amount = parseFloat(document.getElementById('newEntryAmount').value);
+
+      if (isNaN(price) || price <= 0 || isNaN(amount) || amount <= 0) {
+        alert('Пожалуйста, введите корректные положительные значения');
+        return;
+      }
+
       entries.push({ price, amount });
-      document.querySelector('.entry-price').value = '';
-      document.querySelector('.entry-amount').value = '';
+      document.getElementById('newEntryPrice').value = '';
+      document.getElementById('newEntryAmount').value = '';
       renderEntries();
     }
+
 
     function renderEntries() {
       let container = document.getElementById('entries');
