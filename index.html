@@ -29,17 +29,16 @@
       border-radius: 20px;
       padding: 32px 28px;
       width: 100%;
-      max-width: 100%;
-      height: 100vh;
+      max-width: 600px;
       box-shadow: 0 6px 24px var(--shadow);
-      overflow-y: auto;
+      margin: 20px 0;
     }
     .header { text-align: center; margin-bottom: 28px; }
     .header h1 {
       font-size: 2.4rem;
       background: linear-gradient(var(--gradient-angle), var(--accent-start), var(--accent-end));
       -webkit-background-clip: text;
-      background-clip: text;  /* добавлено стандартное свойство */
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 8px;
     }
@@ -72,7 +71,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .grid { display: grid; gap: 16px; }
-    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
     input, select {
       width: 100%;
       padding: 16px;
@@ -91,7 +90,9 @@
       border: none;
       font-size: 1rem;
       cursor: pointer;
+      transition: transform 0.2s;
     }
+    .btn:active { transform: scale(0.98); }
     .results {
       margin-top: 24px;
       background: rgba(0, 0, 0, 0.4);
@@ -113,11 +114,22 @@
       background: #1a1a1a;
       border-radius: 16px;
       cursor: pointer;
+      transition: transform 0.2s;
     }
+    .btn-block:hover { transform: translateY(-2px); }
     .btn-block img { width: 36px; height: 36px; opacity: 0.9; }
-    .btn-content { display: flex; flex-direction: column; }
+    .btn-content { display: flex; flex-direction: column; flex-grow: 1; }
     .btn-content span { font-size: 1.2rem; font-weight: 600; }
     .btn-desc { font-size: 0.9rem; opacity: 0.7; margin-top: 4px; }
+
+    .entry-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .entry-item input { margin: 0; }
+    .entry-item button { padding: 10px 16px; }
 
     .modal {
       position: fixed;
@@ -164,13 +176,16 @@
     </div>
 
     <div id="avg" class="section active">
-      <div class="grid grid-2" id="entries">
-        <input type="number" placeholder="Цена входа" class="entry-price" step="0.0001">
-        <input type="number" placeholder="Объём" class="entry-amount" step="0.0001">
-      </div>
-      <div class="grid grid-2" style="margin-top:12px;">
-        <button class="btn" onclick="addEntry()">+ Добавить точку</button>
-        <button class="btn" onclick="calculateAvg()">Рассчитать среднюю</button>
+      <div class="grid">
+        <div class="grid grid-2">
+          <input type="number" id="newEntryPrice" placeholder="Цена входа" step="0.0001">
+          <input type="number" id="newEntryAmount" placeholder="Объём" step="0.0001">
+        </div>
+        <div class="grid grid-2" style="margin-top:12px;">
+          <button class="btn" onclick="addEntry()">+ Добавить точку</button>
+          <button class="btn" onclick="calculateAvg()">Рассчитать среднюю</button>
+        </div>
+        <div id="entries" class="grid" style="gap: 12px; margin-top: 16px;"></div>
       </div>
       <div id="avgResult" class="results"></div>
     </div>
@@ -244,16 +259,16 @@
     let entries = [];
 
     function addEntry() {
-      if (entries.length >= 5) {
-        alert('Максимальное количество точек входа - 5');
-        return;
-      }
-
       const price = parseFloat(document.getElementById('newEntryPrice').value);
       const amount = parseFloat(document.getElementById('newEntryAmount').value);
 
       if (isNaN(price) || price <= 0 || isNaN(amount) || amount <= 0) {
         alert('Пожалуйста, введите корректные положительные значения');
+        return;
+      }
+
+      if (entries.length >= 5) {
+        alert('Максимальное количество точек входа - 5');
         return;
       }
 
@@ -263,18 +278,17 @@
       renderEntries();
     }
 
-
     function renderEntries() {
       let container = document.getElementById('entries');
-      container.innerHTML = ''; // очистить текущий список
+      container.innerHTML = '';
 
       entries.forEach((entry, idx) => {
         let div = document.createElement('div');
-        div.classList.add('entry-item');
+        div.className = 'entry-item';
         div.innerHTML = `
-          <input type="number" value="${entry.price}" readonly>
-          <input type="number" value="${entry.amount}" readonly>
-          <button onclick="removeEntry(${idx})">Удалить</button>
+          <input type="number" value="${entry.price}" step="0.0001" readonly>
+          <input type="number" value="${entry.amount}" step="0.0001" readonly>
+          <button class="btn" onclick="removeEntry(${idx})">Удалить</button>
         `;
         container.appendChild(div);
       });
@@ -291,22 +305,38 @@
         return;
       }
 
-      let totalValue = 0;
-      let totalAmount = 0;
-
-      entries.forEach(entry => {
-        totalValue += entry.price * entry.amount;
-        totalAmount += entry.amount;
-      });
-
+      let totalValue = entries.reduce((acc, entry) => acc + entry.price * entry.amount, 0);
+      let totalAmount = entries.reduce((acc, entry) => acc + entry.amount, 0);
       let avgPrice = totalValue / totalAmount;
-      document.getElementById('avgResult').textContent = `Средняя точка входа: ${avgPrice.toFixed(4)} BTC`;
+
+      document.getElementById('avgResult').textContent = 
+        `Средняя точка входа: ${avgPrice.toFixed(4)} (${entries.length} позиций)`;
+    }
+
+    function calculateRisk() {
+      const deposit = parseFloat(document.getElementById('deposit').value);
+      const riskPercent = parseFloat(document.getElementById('riskPercent').value);
+      const entryPrice = parseFloat(document.getElementById('entryPrice').value);
+      const stopLoss = parseFloat(document.getElementById('stopLoss').value);
+      const positionType = document.getElementById('positionType').value;
+
+      if ([deposit, riskPercent, entryPrice, stopLoss].some(isNaN)) {
+        alert('Заполните все обязательные поля');
+        return;
+      }
+
+      const riskAmount = deposit * (riskPercent / 100);
+      const priceDifference = Math.abs(entryPrice - stopLoss);
+      const contractSize = riskAmount / priceDifference;
+
+      document.getElementById('riskResult').textContent = 
+        `Размер позиции: ${contractSize.toFixed(4)} BTC`;
     }
 
     function showSection(id, event) {
-      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
     }
 
