@@ -6,115 +6,189 @@
   <title>Crypto Ask Calculator</title>
   <style>
     :root {
-      --bg-color: #0d0d0d;
-      --fg-color: #e0e0e0;
+      --bg-color: #0e0e0e;
+      --fg-color: #f1f1f1;
       --accent-start: #00c9ff;
       --accent-end: #92fe9d;
       --gradient-angle: 135deg;
-      --btn-bg: rgba(31,31,31,0.8);
-      --shadow: rgba(0, 0, 0, 0.4);
+      --shadow: rgba(0, 0, 0, 0.3);
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: var(--bg-color);
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      background: linear-gradient(160deg, #121212, #1c1c1c 50%, #161616);
       color: var(--fg-color);
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      display: flex; justify-content: center; align-items: center;
-      min-height: 100vh; padding: 20px; position: relative;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
-    /* Animated Background */
-    body::before {
-      content: '';
-      position: absolute; inset: -40%;
-      background: radial-gradient(circle at center, rgba(0,200,255,0.1), transparent 70%);
-      animation: float 20s ease-in-out infinite;
-      z-index: 0;
-    }
-    @keyframes float { 0%,100%{transform:translate(0,0)scale(1);}50%{transform:translate(25%,15%)scale(1.1);} }
+
     .container {
-      position: relative; z-index:1;
-      background: rgba(26,26,26,0.9);
-      border-radius: 16px; padding: 30px;
-      max-width: 600px; width:100%;
-      box-shadow: 0 8px 32px var(--shadow);
+      background: rgba(20, 20, 20, 0.95);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 6px 24px var(--shadow);
     }
-    .header { text-align:center; margin-bottom:24px; }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
     .header h1 {
-      font-size:2.4rem; background:linear-gradient(var(--gradient-angle), var(--accent-start), var(--accent-end));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-      margin-bottom:8px;
-    }
-    .header p { font-size:0.95rem; opacity:0.7; }
-    .main-nav { display:flex; gap:12px; justify-content:center; margin-bottom:24px; }
-    .nav-btn { flex:1; padding:12px; background:var(--btn-bg); border:none; border-radius:50px;
-      cursor:pointer; font-weight:500; transition:all .3s ease;
-    }
-    .nav-btn.active, .nav-btn:hover {
+      font-size: 2rem;
       background: linear-gradient(var(--gradient-angle), var(--accent-start), var(--accent-end));
-      color: var(--bg-color);
-      transform: translateY(-2px) scale(1.02);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
     }
-    .section { display:none; animation:fadeIn .4s ease-out; }
-    .section.active { display:block; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
-    .grid { display:grid; gap:12px; }
-    .grid-2 { grid-template-columns:1fr 1fr; }
+
+    .header p {
+      font-size: 0.95rem;
+      opacity: 0.7;
+    }
+
+    .main-nav {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      border-radius: 50px;
+      color: var(--fg-color);
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    .nav-btn.active,
+    .nav-btn:hover {
+      background: linear-gradient(var(--gradient-angle), var(--accent-start), var(--accent-end));
+      color: #0f0f0f;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
     input, select {
-      background: rgba(31,31,31,0.7); border:1px solid #333;
-      border-radius:8px; padding:12px; color:var(--fg-color);
-      transition:all .3s;
+      width: 100%;
+      padding: 12px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: var(--fg-color);
+      font-size: 1rem;
+      transition: border 0.3s, box-shadow 0.3s;
     }
+
     input:focus, select:focus {
       border-color: var(--accent-start);
-      box-shadow: 0 0 8px rgba(0,200,255,0.2);
-      outline:none;
+      box-shadow: 0 0 6px rgba(0, 200, 255, 0.3);
+      outline: none;
     }
-    .btn { display:inline-flex; align-items:center; justify-content:center;
-      gap:8px; padding:14px 20px; border:none; border-radius:50px;
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 18px;
+      border-radius: 50px;
       background: linear-gradient(var(--gradient-angle), var(--accent-start), var(--accent-end));
-      color: var(--bg-color); font-weight:600;
-      overflow:hidden; position:relative;
-      transition:transform .3s;
+      color: #0e0e0e;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease;
     }
-    .btn::after {
-      content:''; position:absolute; inset:0;
-      background: conic-gradient(from 0deg, var(--accent-start), var(--accent-end), var(--accent-start));
-      opacity:0.2; filter:blur(8px);
-      animation:rotate 6s linear infinite;
-      z-index:0;
+
+    .btn:hover {
+      transform: translateY(-2px);
     }
-    .btn span { position:relative; z-index:1; }
-    .btn:hover { transform: translateY(-2px) scale(1.02); }
-    @keyframes rotate { to{transform:rotate(360deg);} }
-    .results { margin-top:20px; background:rgba(0,0,0,0.4); padding:16px;
-      border-radius:8px; text-align:center; font-size:1rem;
+
+    .results {
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1rem;
     }
-    .actions { display:flex; flex-wrap:wrap; gap:16px; justify-content:center; margin-top:24px; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 28px;
+    }
+
     .btn-action {
-      position: relative; display:inline-flex; align-items:center; gap:10px;
-      padding:12px 18px; border-radius:30px; overflow:hidden;
-      border:2px solid transparent; background:var(--btn-bg);
-      color:var(--fg-color); font-weight:600; text-transform:uppercase;
-      letter-spacing:1px; cursor:pointer; transition:all .3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #1a1a1a;
+      color: var(--fg-color);
+      border: 1px solid #2a2a2a;
+      border-radius: 24px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.2s;
     }
-    .btn-action::before {
-      content:''; position:absolute; inset:-40%;
-      background: conic-gradient(var(--accent-start), var(--accent-end), var(--accent-start));
-      animation:rotate 5s linear infinite; opacity:0.25;
-      filter:blur(6px); z-index:0;
-    }
+
     .btn-action:hover {
-      background: rgba(31,31,31,0.9);
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 4px 20px var(--shadow);
+      background: #2a2a2a;
+      transform: translateY(-2px);
     }
-    .btn-action span { position: relative; z-index:1; }
-    /* Specific Buttons */
-    .btn-telegram::before, .btn-bybit::before { mix-blend-mode: screen; }
-    .btn-telegram span { color:#0088cc; }
-    .btn-bybit span { color:#f7931a; }
+
+    .btn-action img {
+      width: 18px;
+      height: 18px;
+      opacity: 0.8;
+    }
+
+    .btn-telegram span { color: #0088cc; }
+    .btn-bybit span { color: #f7931a; }
     .btn-club span { color: var(--accent-start); }
     .btn-help span { color: var(--accent-end); }
+
   </style>
 </head>
 <body>
@@ -123,12 +197,14 @@
       <h1>Crypto Ask Calculator</h1>
       <p>Быстрый и точный расчёт для вашей криптовалютной стратегии</p>
     </div>
+
     <div class="main-nav">
       <button class="nav-btn active" onclick="showSection('avg', event)">Средняя точка</button>
       <button class="nav-btn" onclick="showSection('risk', event)">Риск/Объём</button>
     </div>
+
     <div id="avg" class="section active">
-      <div id="entries" class="grid grid-2">
+      <div class="grid grid-2" id="entries">
         <input type="number" placeholder="Цена входа" class="entry-price" step="0.0001">
         <input type="number" placeholder="Объём" class="entry-amount" step="0.0001">
       </div>
@@ -138,9 +214,13 @@
       </div>
       <div id="avgResult" class="results"></div>
     </div>
+
     <div id="risk" class="section">
       <div class="grid">
-        <select id="positionType"><option value="long">Long</option><option value="short">Short</option></select>
+        <select id="positionType">
+          <option value="long">Long</option>
+          <option value="short">Short</option>
+        </select>
         <input type="number" id="deposit" placeholder="Депозит ($)">
         <input type="number" id="riskPercent" placeholder="Риск (%)" step="0.1">
         <input type="number" id="entryPrice" placeholder="Цена входа" step="0.0001">
@@ -150,34 +230,38 @@
       </div>
       <div id="riskResult" class="results"></div>
     </div>
+
     <div class="actions">
       <button class="btn-action btn-telegram" onclick="window.open('https://t.me/cryptoaskgroup','_blank')">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v6/icons/telegram.svg" alt="Telegram" width="20"><span>Telegram</span>
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v6/icons/telegram.svg" alt="Telegram">
+        <span>Telegram</span>
       </button>
       <button class="btn-action btn-bybit" onclick="window.open('https://partner.bybit.com/b/askcrypto','_blank')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Bybit_Logo.svg" alt="Bybit" width="20"><span>Bybit</span>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Bybit_Logo.svg" alt="Bybit">
+        <span>Bybit</span>
       </button>
       <button class="btn-action btn-club" onclick="showModal('clubModal')">
-        <img src="https://unpkg.com/heroicons@2.0.13/24/outline/users.svg" alt="Клуб" width="20"><span>Клуб</span>
+        <img src="https://unpkg.com/heroicons@2.0.13/24/outline/users.svg" alt="Клуб">
+        <span>Клуб</span>
       </button>
       <button class="btn-action btn-help" onclick="showModal('helpModal')">
-        <img src="https://unpkg.com/heroicons@2.0.13/24/outline/information-circle.svg" alt="Инструкция" width="20"><span>Инструкция</span>
+        <img src="https://unpkg.com/heroicons@2.0.13/24/outline/information-circle.svg" alt="Инструкция">
+        <span>Инструкция</span>
       </button>
     </div>
   </div>
-  <!-- Modals and scripts remain same -->
+
   <script>
     function showSection(id, event) {
-      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       event.currentTarget.classList.add('active');
     }
-    function addEntry() { /* same logic as before */ }
-    function calculateAverage() { /* same logic as before */ }
-    function calculateRisk() { /* same logic as before */ }
-    function showModal(id) { document.getElementById(id).classList.add('show'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+    function showModal(id) {
+      alert(`Открыть модалку: ${id}`);
+    }
   </script>
 </body>
 </html>
