@@ -3,35 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Crypto Ask Calculator</title>
+  <title>CRYPTO ASK Calculator</title>
   <style>
     :root {
-      --bg-color: #0e0e0e;
-      --fg-color: #f1f1f1;
+      --color-bg: #000000; /* чёрный фон */
+      --color-text: #FFFFFF; /* основной текст */
+      --color-secondary-bg: #121212; /* графитовый фон */
+      --color-secondary-text: #CCCCCC; /* вторичный текст */
+      --color-risk: #FF3B30; /* красный для риска/stop-loss */
+      --color-profit: #34C759; /* зелёный для прибыли/take-profit */
       --accent-start: #00c9ff;
       --accent-end: #92fe9d;
       --gradient-angle: 135deg;
-      --shadow: rgba(0, 0, 0, 0.3);
+      --shadow: rgba(0, 0, 0, 0.5);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
-      background: linear-gradient(160deg, #2c3e50, #4ca1af, #f0f8ff);
-      color: var(--fg-color);
+      background: var(--color-bg);
+      color: var(--color-text);
       font-family: 'Segoe UI', Tahoma, sans-serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-attachment: fixed;
     }
     .container {
-      background: rgba(20, 20, 20, 0.95);
+      background: var(--color-secondary-bg);
       border-radius: 20px;
-      padding: 32px 28px;
+      padding: 32px;
       width: 100%;
       max-width: 600px;
       box-shadow: 0 6px 24px var(--shadow);
-      margin: 20px 0;
+      margin: 20px;
     }
     .header { text-align: center; margin-bottom: 28px; }
     .header h1 {
@@ -42,7 +45,10 @@
       -webkit-text-fill-color: transparent;
       margin-bottom: 8px;
     }
-    .header p { font-size: 1rem; opacity: 0.8; }
+    .header p {
+      font-size: 1rem;
+      color: var(--color-secondary-text);
+    }
     .main-nav {
       display: flex;
       gap: 14px;
@@ -55,7 +61,7 @@
       background: rgba(255, 255, 255, 0.05);
       border: none;
       border-radius: 50px;
-      color: var(--fg-color);
+      color: var(--color-text);
       cursor: pointer;
       font-weight: 500;
       transition: background 0.3s ease;
@@ -78,7 +84,7 @@
       background: #1a1a1a;
       border: none;
       border-radius: 14px;
-      color: var(--fg-color);
+      color: var(--color-text);
       font-size: 1rem;
     }
     .btn {
@@ -95,10 +101,12 @@
     .btn:active { transform: scale(0.98); }
     .results {
       margin-top: 24px;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(255,255,255,0.05);
       padding: 18px;
       border-radius: 10px;
       text-align: center;
+      font-size: 1rem;
+      line-height: 1.5;
     }
     .actions {
       display: flex;
@@ -120,7 +128,7 @@
     .btn-block img { width: 36px; height: 36px; opacity: 0.9; }
     .btn-content { display: flex; flex-direction: column; flex-grow: 1; }
     .btn-content span { font-size: 1.2rem; font-weight: 600; }
-    .btn-desc { font-size: 0.9rem; opacity: 0.7; margin-top: 4px; }
+    .btn-desc { font-size: 0.9rem; color: var(--color-secondary-text); margin-top: 4px; }
 
     .entry-item {
       display: grid;
@@ -128,7 +136,7 @@
       gap: 10px;
       align-items: center;
     }
-    .entry-item input { margin: 0; }
+    .entry-item input { margin: 0; background: #1a1a1a; }
     .entry-item button { padding: 10px 16px; }
 
     .modal {
@@ -143,31 +151,37 @@
     }
     .modal.active { display: flex; }
     .modal-content {
-      background: #121212;
+      background: var(--color-secondary-bg);
       padding: 24px;
       border-radius: 16px;
-      max-width: 400px;
+      max-width: 500px;
       width: 90%;
-      text-align: center;
+      color: var(--color-text);
+      line-height: 1.5;
     }
     .modal-content h3 {
       margin-bottom: 12px;
-      color: #fff;
+      font-size: 1.4rem;
     }
-    .modal-content p {
+    .modal-content p, .modal-content ul {
       font-size: 0.95rem;
-      opacity: 0.85;
+      margin-bottom: 16px;
+    }
+    .modal-content a {
+      color: var(--accent-start);
+      text-decoration: none;
+      font-weight: 600;
     }
     .modal-content .btn {
-      margin-top: 20px;
+      margin-top: 12px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Crypto Ask Calculator</h1>
-      <p>Быстрый и точный расчёт для вашей криптовалютной стратегии</p>
+      <h1>CRYPTO ASK Calculator</h1>
+      <p>Быстрый и точный расчёт для вашей стратегии</p>
     </div>
 
     <div class="main-nav">
@@ -175,6 +189,7 @@
       <button class="nav-btn" onclick="showSection('risk', event)">Риск/Объём</button>
     </div>
 
+    <!-- Average Price Section -->
     <div id="avg" class="section active">
       <div class="grid">
         <div class="grid grid-2">
@@ -190,6 +205,7 @@
       <div id="avgResult" class="results"></div>
     </div>
 
+    <!-- Risk & Position Section -->
     <div id="risk" class="section">
       <div class="grid">
         <select id="positionType">
@@ -206,52 +222,43 @@
       <div id="riskResult" class="results"></div>
     </div>
 
+    <!-- Action Buttons -->
     <div class="actions">
       <div class="btn-block" onclick="window.open('https://t.me/cryptoaskgroup','_blank')">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v6/icons/telegram.svg">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v6/icons/telegram.svg" alt="Telegram">
         <div class="btn-content">
-          <span>Telegram</span>
-          <div class="btn-desc">Присоединяйтесь к нашему сообществу для общения и новостей.</div>
+          <span>✈️ CRYPTO ASK</span>
+          <div class="btn-desc">Crypto news & Education community</div>
         </div>
       </div>
       <div class="btn-block" onclick="window.open('https://partner.bybit.com/b/askcrypto','_blank')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Bybit_Logo.svg">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Bybit_Logo.svg" alt="Bybit">
         <div class="btn-content">
-          <span>Bybit</span>
-          <div class="btn-desc">Зарегистрируйтесь через партнёрскую ссылку и получайте бонусы!</div>
+          <span>☝️ Bybit</span>
+          <div class="btn-desc">регистрируйся по ссылке и забирай до 30000$ бонусов</div>
         </div>
       </div>
       <div class="btn-block" onclick="showModal('clubModal')">
-        <img src="https://unpkg.com/heroicons@2.0.13/24/outline/users.svg">
+        <img src="https://unpkg.com/heroicons@2.0.13/24/outline/users.svg" alt="Club">
         <div class="btn-content">
-          <span>Клуб</span>
-          <div class="btn-desc">Узнайте об условиях вступления в закрытый клуб трейдеров.</div>
-        </div>
-      </div>
-      <div class="btn-block" onclick="showModal('helpModal')">
-        <img src="https://unpkg.com/heroicons@2.0.13/24/outline/information-circle.svg">
-        <div class="btn-content">
-          <span>Инструкция</span>
-          <div class="btn-desc">Как использовать калькулятор: гайд внутри.</div>
+          <span>Закрытый торговый клуб</span>
+          <div class="btn-desc">Аналитика, фьючерсные и спотовые сигналы, общение в кругу трейдеров</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal windows -->
+  <!-- Closed Club Modal -->
   <div class="modal" id="clubModal">
     <div class="modal-content">
-      <h3>Закрытый клуб трейдеров</h3>
-      <p>Присоединяйтесь к нашему закрытому клубу для профессиональных трейдеров. Мы делимся секретами торговли и специальными инсайтами!</p>
+      <h3>Как попасть в закрытый клуб?</h3>
+      <p>Доступ в закрытый клуб возможен по подписке ИЛИ для моих активных рефералов абсолютно бесплатно.</p>
+      <ul>
+        <li><strong>По подписке:</strong> 15 $/мес.</li>
+        <li><strong>Рефералам:</strong> регистрация на бирже ☝️ Bybit по моей партнёрской ссылке (при регистрации через мобильное приложение введите код <code>ASKCRYPTO</code>), депозит от 100 $ и активность.</li>
+      </ul>
+      <p>Если у вас уже есть аккаунт Bybit, вы можете перенести его под мою ссылку. Напишите мне в личные сообщения (<a href="https://t.me/yourprofile" target="_blank">мой профиль</a>), и я расскажу, как это сделать.</p>
       <button class="btn" onclick="hideModal('clubModal')">Закрыть</button>
-    </div>
-  </div>
-
-  <div class="modal" id="helpModal">
-    <div class="modal-content">
-      <h3>Инструкция</h3>
-      <p>Просто введите данные по точкам входа или риску. После нажатия кнопки, калькулятор предоставит точный расчет для вашей стратегии.</p>
-      <button class="btn" onclick="hideModal('helpModal')">Закрыть</button>
     </div>
   </div>
 
@@ -261,17 +268,14 @@
     function addEntry() {
       const price = parseFloat(document.getElementById('newEntryPrice').value);
       const amount = parseFloat(document.getElementById('newEntryAmount').value);
-
       if (isNaN(price) || price <= 0 || isNaN(amount) || amount <= 0) {
-        alert('Пожалуйста, введите корректные положительные значения');
+        alert('Введите корректные положительные значения');
         return;
       }
-
       if (entries.length >= 5) {
-        alert('Максимальное количество точек входа - 5');
+        alert('Максимум 5 точек входа');
         return;
       }
-
       entries.push({ price, amount });
       document.getElementById('newEntryPrice').value = '';
       document.getElementById('newEntryAmount').value = '';
@@ -279,16 +283,15 @@
     }
 
     function renderEntries() {
-      let container = document.getElementById('entries');
+      const container = document.getElementById('entries');
       container.innerHTML = '';
-
-      entries.forEach((entry, idx) => {
-        let div = document.createElement('div');
+      entries.forEach((e, i) => {
+        const div = document.createElement('div');
         div.className = 'entry-item';
         div.innerHTML = `
-          <input type="number" value="${entry.price}" step="0.0001" readonly>
-          <input type="number" value="${entry.amount}" step="0.0001" readonly>
-          <button class="btn" onclick="removeEntry(${idx})">Удалить</button>
+          <input type="number" value="${e.price}" step="0.0001" readonly>
+          <input type="number" value="${e.amount}" step="0.0001" readonly>
+          <button class="btn" onclick="removeEntry(${i})">Удалить</button>
         `;
         container.appendChild(div);
       });
@@ -300,17 +303,15 @@
     }
 
     function calculateAvg() {
-      if (entries.length < 1) {
+      if (!entries.length) {
         alert('Добавьте хотя бы одну точку входа!');
         return;
       }
-
-      let totalValue = entries.reduce((acc, entry) => acc + entry.price * entry.amount, 0);
-      let totalAmount = entries.reduce((acc, entry) => acc + entry.amount, 0);
-      let avgPrice = totalValue / totalAmount;
-
-      document.getElementById('avgResult').textContent = 
-        `Средняя точка входа: ${avgPrice.toFixed(4)} (${entries.length} позиций)`;
+      const totalValue = entries.reduce((sum, e) => sum + e.price * e.amount, 0);
+      const totalAmount = entries.reduce((sum, e) => sum + e.amount, 0);
+      const avg = totalValue / totalAmount;
+      document.getElementById('avgResult').textContent =
+        `Средняя точка входа: ${avg.toFixed(4)} (${entries.length} позиций)`;
     }
 
     function calculateRisk() {
@@ -318,35 +319,33 @@
       const riskPercent = parseFloat(document.getElementById('riskPercent').value);
       const entryPrice = parseFloat(document.getElementById('entryPrice').value);
       const stopLoss = parseFloat(document.getElementById('stopLoss').value);
-      const positionType = document.getElementById('positionType').value;
-
-      if ([deposit, riskPercent, entryPrice, stopLoss].some(isNaN)) {
-        alert('Заполните все обязательные поля');
+      const takeProfit = parseFloat(document.getElementById('takeProfit').value);
+      if ([deposit, riskPercent, entryPrice, stopLoss, takeProfit].some(isNaN)) {
+        alert('Заполните все поля');
         return;
       }
 
       const riskAmount = deposit * (riskPercent / 100);
-      const priceDifference = Math.abs(entryPrice - stopLoss);
-      const contractSize = riskAmount / priceDifference;
+      const stopDiff = Math.abs(entryPrice - stopLoss);
+      const contractSize = riskAmount / stopDiff;
 
-      document.getElementById('riskResult').textContent = 
-        `Размер позиции: ${contractSize.toFixed(4)} BTC`;
+      const profitDiff = Math.abs(takeProfit - entryPrice);
+      const profitAmount = contractSize * profitDiff;
+
+      document.getElementById('riskResult').innerHTML =
+        `<div>Размер позиции: ${contractSize.toFixed(4)} BTC</div>
+         <div style="color: var(--color-risk)">Риск (stop): ${riskAmount.toFixed(2)} $</div>
+         <div style="color: var(--color-profit)">Профит (take-profit): ${profitAmount.toFixed(2)} $</div>`;
     }
 
-    function showSection(id, event) {
+    function showSection(id, e) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      event.target.classList.add('active');
+      e.target.classList.add('active');
     }
-
-    function showModal(id) {
-      document.getElementById(id).classList.add('active');
-    }
-
-    function hideModal(id) {
-      document.getElementById(id).classList.remove('active');
-    }
+    function showModal(id) { document.getElementById(id).classList.add('active'); }
+    function hideModal(id) { document.getElementById(id).classList.remove('active'); }
   </script>
 </body>
 </html>
