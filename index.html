@@ -88,6 +88,7 @@
     }
     .btn:active { transform: scale(0.98); }
     .results {
+      display: none;
       margin-top: 20px;
       background: rgba(255,255,255,0.05);
       padding: 16px;
@@ -252,7 +253,9 @@
       const totalValue = entries.reduce((sum, e) => sum + e.price * e.amount, 0);
       const totalAmount = entries.reduce((sum, e) => sum + e.amount, 0);
       const avg = totalValue / totalAmount;
-      document.getElementById('avgResult').textContent = `Средняя точка входа: ${avg.toFixed(4)} (${entries.length} позиций)`;
+      const avgRes = document.getElementById('avgResult');
+      avgRes.textContent = `Средняя точка входа: ${avg.toFixed(4)} (${entries.length} позиций)`;
+      avgRes.style.display = 'block';
     }
     function calculateRisk() {
       const deposit = parseFloat(document.getElementById('deposit').value);
@@ -269,13 +272,18 @@
       const contractSize = riskAmount / stopDiff;
       const profitDiff = Math.abs(takeProfit - entryPrice);
       const profitAmount = contractSize * profitDiff;
-      document.getElementById('riskResult').innerHTML = `<div>Размер позиции: ${contractSize.toFixed(4)} BTC</div><div style="color: var(--color-risk)">Риск (stop): ${riskAmount.toFixed(2)} $</div><div style="color: var(--color-profit)">Профит (take-profit): ${profitAmount.toFixed(2)} $</div>`;
+      const riskRes = document.getElementById('riskResult');
+      riskRes.innerHTML = `<div>Размер позиции: ${contractSize.toFixed(4)} BTC</div><div style="color: var(--color-risk)">Риск (stop): ${riskAmount.toFixed(2)} $</div><div style="color: var(--color-profit)">Профит (take-profit): ${profitAmount.toFixed(2)} $</div>`;
+      riskRes.style.display = 'block';
     }
     function showSection(id, e) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       e.target.classList.add('active');
+      // Hide results when switching sections
+      document.getElementById('avgResult').style.display = 'none';
+      document.getElementById('riskResult').style.display = 'none';
     }
     function showModal(id) { document.getElementById(id).classList.add('active'); }
     function hideModal(id) { document.getElementById(id).classList.remove('active'); }
