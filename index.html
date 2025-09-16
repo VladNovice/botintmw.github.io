@@ -69,8 +69,14 @@
     .modal-content h3 { margin-bottom: 12px; font-size: 1.4rem; }
     .modal-content p, .modal-content ul { font-size: 0.95rem; margin-bottom: 12px; }
     .modal-content a { color: var(--color-text); text-decoration: underline; font-weight: 600; }
-    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; flex-wrap: wrap; }
     footer.footer { text-align: center; padding: 12px 0; background: var(--color-secondary-bg); color: var(--color-secondary-text); font-size: 0.85rem; }
+    /* responsive tweak for action buttons */
+    @media (max-width: 500px) {
+      .modal-actions { justify-content: center; }
+      .btn-block { padding: 12px; gap: 10px; }
+      .btn-block img { width: 36px; height: 36px; }
+    }
   </style>
 </head>
 <body>
@@ -119,10 +125,19 @@
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v6/icons/telegram.svg" alt="Telegram логотип" />
         <div class="btn-content"><span>CRYPTO ASK</span><div class="btn-desc">Crypto news & Education community</div></div>
       </div>
+
+      <!-- Bybit button (без упоминания бонуса) -->
       <div class="btn-block" onclick="window.open('https://partner.bybit.com/b/askcrypto','_blank')">
         <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Bybit_Logo.svg" alt="Bybit логотип" />
-        <div class="btn-content"><span>Bybit</span><div class="btn-desc">Регистрируйся по ссылке и забирай до 30000$ бонусов</div></div>
+        <div class="btn-content"><span>Bybit</span><div class="btn-desc">Регистрация по партнёрской ссылке</div></div>
       </div>
+
+      <!-- BingX button (новая) -->
+      <div class="btn-block" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v6/icons/bingx.svg" alt="BingX логотип" />
+        <div class="btn-content"><span>BingX</span><div class="btn-desc">Регистрация по партнёрской ссылке</div></div>
+      </div>
+
       <div class="btn-block" onclick="showModal('clubModal')">
         <img src="https://unpkg.com/heroicons@2.0.13/24/outline/users.svg" alt="Клуб логотип" />
         <div class="btn-content"><span>Закрытый торговый клуб</span><div class="btn-desc">Аналитика, фьючерсные и спотовые сигналы</div></div>
@@ -136,12 +151,13 @@
       <p>Доступ в закрытый клуб возможен по подписке ИЛИ для моих активных рефералов абсолютно бесплатно.</p>
       <ul>
         <li>По подписке: 50 $/мес.</li>
-        <li>Рефералам: регистрация на бирже Вуbit по моей <a href="https://partner.bybit.com/b/askcrypto" target="_blank">партнерской ссылке</a> (при регистрации через мобильное приложение введите код ASKCRYPTO), депозит от 100 $ и активность.</li>
+        <li>Рефералам: регистрация на бирже Bybit (<a href="https://partner.bybit.com/b/askcrypto" target="_blank" rel="noopener">https://partner.bybit.com/b/askcrypto</a>) или BingX (<a href="https://bingx.com/partner/cryptoask/" target="_blank" rel="noopener">https://bingx.com/partner/cryptoask/</a>) по моей партнёрской ссылке, депозит от 300 $ и активность.</li>
       </ul>
-      <p>Если у вас уже есть аккаунт Вуbit, вы можете перенести его под мою ссылку. Напишите мне в личные сообщения (<a href="https://t.me/ask_22" target="_blank">мой профиль</a>), и я расскажу, как это сделать.</p>
+      <p>Если у вас уже есть аккаунт Bybit или BingX, вы можете перенести его под мою ссылку. Напишите мне в личные сообщения (<a href="https://t.me/ask_22" target="_blank" rel="noopener">мой профиль</a>), и я расскажу, как это сделать.</p>
       <div class="modal-actions">
+        <button class="btn" onclick="window.open('https://partner.bybit.com/b/askcrypto','_blank')">Регистрация Bybit</button>
+        <button class="btn" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')">Регистрация BingX</button>
         <button class="btn" onclick="hideModal('clubModal')">Закрыть</button>
-        <button class="btn" onclick="window.open('https://partner.bybit.com/b/askcrypto','_blank')">Регистрация</button>
       </div>
     </div>
   </div>
