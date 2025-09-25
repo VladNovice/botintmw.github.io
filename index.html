@@ -132,9 +132,14 @@
         <div class="btn-content"><span>Bybit</span><div class="btn-desc">Регистрация по партнёрской ссылке</div></div>
       </div>
 
-      <!-- BingX button (новая) -->
+            <!-- BingX button (новая) -->
       <div class="btn-block" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v6/icons/bingx.svg" alt="BingX логотип" />
+        <!-- Используем Simple Icons с jsDelivr; если не загрузится, fallback на GitHub CDN -->
+        <img
+          src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/bingx.svg"
+          onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/bingx.svg';"
+          alt="BingX логотип"
+        />
         <div class="btn-content"><span>BingX</span><div class="btn-desc">Регистрация по партнёрской ссылке</div></div>
       </div>
 
