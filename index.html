@@ -85,10 +85,12 @@
       <h1>CRYPTO ASK Calculator</h1>
       <p>Быстрый и точный расчёт для вашей стратегии</p>
     </header>
+
     <nav class="main-nav" aria-label="Главная навигация">
       <button class="nav-btn active" onclick="showSection('avg', event)">Средняя точка</button>
       <button class="nav-btn" onclick="showSection('risk', event)">Риск/Объём</button>
     </nav>
+
     <main class="main-content">
       <section id="avg" class="section active" aria-labelledby="avg-heading">
         <div class="grid">
@@ -104,6 +106,7 @@
         </div>
         <div id="avgResult" class="results" aria-live="polite"></div>
       </section>
+
       <section id="risk" class="section" aria-labelledby="risk-heading">
         <div class="grid">
           <select id="positionType">
@@ -120,6 +123,7 @@
         <div id="riskResult" class="results" aria-live="polite"></div>
       </section>
     </main>
+
     <div class="actions">
       <div class="btn-block" onclick="window.open('https://t.me/cryptoaskgroup','_blank')" role="link" aria-label="CRYPTO ASK Telegram">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v6/icons/telegram.svg" alt="Telegram логотип" />
@@ -132,20 +136,15 @@
         <div class="btn-content"><span>Bybit</span><div class="btn-desc">Регистрация по партнёрской ссылке</div></div>
       </div>
 
-     <!-- BingX button (официальный inline SVG) -->
-<div class="btn-block" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')" role="link" aria-label="BingX">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"
-       width="40" height="40" style="display:block;">
-    <path fill="#0056ff" d="M298.7 229.7L512 442.9l213.3-213.2H298.7zM512 581.1L298.7 794.3h426.6L512 581.1z"/>
-    <path fill="#00b2ff" d="M229.7 298.7L442.9 512 229.7 725.3V298.7zm564.6 0v426.6L581.1 512l213.2-213.3z"/>
-  </svg>
-  <div class="btn-content">
-    <span>BingX</span>
-    <div class="btn-desc">Регистрация по партнёрской ссылке</div>
-  </div>
-</div>
-</div>
-
+      <!-- BingX button: используем локальный файл bingx.jpg (положите рядом с index.html) -->
+      <div class="btn-block" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')" role="link" aria-label="BingX">
+        <!-- Логотип из локального файла -->
+        <img id="bingxImg" src="bingx.jpg" alt="BingX логотип" />
+        <div class="btn-content">
+          <span>BingX</span>
+          <div class="btn-desc">Регистрация по партнёрской ссылке</div>
+        </div>
+      </div>
 
       <div class="btn-block" onclick="showModal('clubModal')">
         <img src="https://unpkg.com/heroicons@2.0.13/24/outline/users.svg" alt="Клуб логотип" />
