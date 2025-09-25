@@ -59,7 +59,7 @@
     .actions { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
     .btn-block { display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--color-secondary-bg); border-radius: 16px; cursor: pointer; transition: transform 0.2s; }
     .btn-block:hover { transform: translateY(-2px); }
-    .btn-block img { width: 40px; height: 40px; background: #FFFFFF; border-radius: 50%; padding: 4px; }
+    .btn-block img, .btn-block svg { width: 40px; height: 40px; background: #FFFFFF; border-radius: 50%; padding: 4px; object-fit: contain; }
     .btn-content span { font-size: 1.2rem; font-weight: 600; color: var(--color-text); }
     .btn-desc { font-size: 0.9rem; color: var(--color-secondary-text); margin-top: 4px; }
     .entry-item { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; margin-top: 8px; }
@@ -75,7 +75,7 @@
     @media (max-width: 500px) {
       .modal-actions { justify-content: center; }
       .btn-block { padding: 12px; gap: 10px; }
-      .btn-block img { width: 36px; height: 36px; }
+      .btn-block img, .btn-block svg { width: 36px; height: 36px; }
     }
   </style>
 </head>
@@ -121,25 +121,25 @@
       </section>
     </main>
     <div class="actions">
-      <div class="btn-block" onclick="window.open('https://t.me/cryptoaskgroup','_blank')">
+      <div class="btn-block" onclick="window.open('https://t.me/cryptoaskgroup','_blank')" role="link" aria-label="CRYPTO ASK Telegram">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v6/icons/telegram.svg" alt="Telegram логотип" />
         <div class="btn-content"><span>CRYPTO ASK</span><div class="btn-desc">Crypto news & Education community</div></div>
       </div>
 
       <!-- Bybit button (без упоминания бонуса) -->
-      <div class="btn-block" onclick="window.open('https://partner.bybit.com/b/askcrypto','_blank')">
+      <div class="btn-block" onclick="window.open('https://partner.bybit.com/b/askcrypto','_blank')" role="link" aria-label="Bybit">
         <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Bybit_Logo.svg" alt="Bybit логотип" />
         <div class="btn-content"><span>Bybit</span><div class="btn-desc">Регистрация по партнёрской ссылке</div></div>
       </div>
 
-            <!-- BingX button (новая) -->
-      <div class="btn-block" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')">
-        <!-- Используем Simple Icons с jsDelivr; если не загрузится, fallback на GitHub CDN -->
-        <img
-          src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/bingx.svg"
-          onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/bingx.svg';"
-          alt="BingX логотип"
-        />
+      <!-- BingX button (надежный вариант с фоллбеком) -->
+      <div class="btn-block" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')" role="link" aria-label="BingX" id="bingxBtn">
+        <!-- Попытка загрузить иконку с CDN -->
+        <img id="bingxImg"
+             src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/bingx.svg"
+             alt="BingX логотип"
+             loading="lazy"
+             style="width:40px;height:40px;object-fit:contain;background:transparent;border-radius:50%;"/>
         <div class="btn-content"><span>BingX</span><div class="btn-desc">Регистрация по партнёрской ссылке</div></div>
       </div>
 
@@ -274,6 +274,62 @@
 
     function showModal(id) { document.getElementById(id).classList.add('active'); }
     function hideModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    // --- BingX image fallback logic ---
+    (function(){
+      const img = document.getElementById('bingxImg');
+      if (!img) return;
+
+      // On error, replace <img> with inline SVG fallback (colorful and visible on dark bg)
+      function handleError() {
+        // create inline SVG fallback
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.setAttribute('viewBox', '0 0 100 100');
+        svg.setAttribute('width', '40');
+        svg.setAttribute('height', '40');
+        svg.style.borderRadius = '50%';
+        svg.style.display = 'block';
+        svg.style.padding = '4px';
+
+        svg.innerHTML = `
+          <defs>
+            <linearGradient id="bxg" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#00A6FF"/>
+              <stop offset="0.6" stop-color="#00D4FF"/>
+              <stop offset="1" stop-color="#5B3BFF"/>
+            </linearGradient>
+          </defs>
+          <rect width="100" height="100" rx="20" fill="url(#bxg)"></rect>
+          <g transform="translate(16,12) scale(0.7)">
+            <!-- stylized 'BX' mark - simple and legible -->
+            <path d="M8 32 L30 8 L52 32 L30 56 Z" fill="#fff" opacity="0.95"></path>
+            <circle cx="30" cy="28" r="6" fill="#000" opacity="0.1"></circle>
+          </g>
+        `;
+
+        img.replaceWith(svg);
+      }
+
+      img.addEventListener('error', function onErr() {
+        img.removeEventListener('error', onErr);
+        handleError();
+      });
+
+      // If the image loaded but is empty (0x0), trigger fallback after short timeout
+      setTimeout(() => {
+        try {
+          if (!img.complete || img.naturalWidth === 0) {
+            // trigger fallback
+            handleError();
+          }
+        } catch (e) {
+          // ignore, just ensure fallback
+          handleError();
+        }
+      }, 500);
+    })();
+    // --- end BingX fallback ---
   </script>
 </body>
 </html>
