@@ -133,15 +133,26 @@
       </div>
 
       <!-- BingX button (надежный вариант с фоллбеком) -->
-      <div class="btn-block" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')" role="link" aria-label="BingX" id="bingxBtn">
-        <!-- Попытка загрузить иконку с CDN -->
-        <img id="bingxImg"
-             src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/bingx.svg"
-             alt="BingX логотип"
-             loading="lazy"
-             style="width:40px;height:40px;object-fit:contain;background:transparent;border-radius:50%;"/>
-        <div class="btn-content"><span>BingX</span><div class="btn-desc">Регистрация по партнёрской ссылке</div></div>
-      </div>
+      <!-- BingX button (inline SVG, без внешних ссылок) -->
+<div class="btn-block" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')" role="link" aria-label="BingX">
+  <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+       style="border-radius:50%;background:transparent;display:block;">
+    <defs>
+      <linearGradient id="bingxGrad" x1="0" x2="1" y1="0" y2="1">
+        <stop offset="0" stop-color="#00A6FF"/>
+        <stop offset="1" stop-color="#5B3BFF"/>
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="20" fill="url(#bingxGrad)" />
+    <text x="50" y="60" font-size="46" font-family="Arial, sans-serif" fill="#fff" text-anchor="middle" font-weight="bold">
+      BX
+    </text>
+  </svg>
+  <div class="btn-content">
+    <span>BingX</span>
+    <div class="btn-desc">Регистрация по партнёрской ссылке</div>
+  </div>
+</div>
 
       <div class="btn-block" onclick="showModal('clubModal')">
         <img src="https://unpkg.com/heroicons@2.0.13/24/outline/users.svg" alt="Клуб логотип" />
