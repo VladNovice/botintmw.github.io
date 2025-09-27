@@ -15,6 +15,11 @@
       --gradient-angle: 135deg;
       --color-risk: #FF3B30;
       --color-profit: #34C759;
+
+      /* BingX brand gradient colors (used for inline SVG logo) */
+      --bingx-grad-1: #00A6FF;
+      --bingx-grad-2: #00D4FF;
+      --bingx-grad-3: #5B3BFF;
     }
     *, *::before, *::after {
       margin: 0;
@@ -59,7 +64,10 @@
     .actions { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
     .btn-block { display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--color-secondary-bg); border-radius: 16px; cursor: pointer; transition: transform 0.2s; }
     .btn-block:hover { transform: translateY(-2px); }
-    .btn-block img, .btn-block svg { width: 40px; height: 40px; background: #FFFFFF; border-radius: 50%; padding: 4px; object-fit: contain; }
+    /* Default square/round badge for small logos (keeps legacy logos consistent) */
+    .btn-block img, .btn-block svg { width: 40px; height: 40px; background: #FFFFFF; border-radius: 50%; padding: 4px; object-fit: contain; display: block; }
+    /* For brand SVGs where we want the filled colored background (no white padding) */
+    .brand-logo { background: none; padding: 0; }
     .btn-content span { font-size: 1.2rem; font-weight: 600; color: var(--color-text); }
     .btn-desc { font-size: 0.9rem; color: var(--color-secondary-text); margin-top: 4px; }
     .entry-item { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; margin-top: 8px; }
@@ -136,10 +144,33 @@
         <div class="btn-content"><span>Bybit</span><div class="btn-desc">Регистрация по партнёрской ссылке</div></div>
       </div>
 
-      <!-- BingX button: используем локальный файл bingx.jpg (положите рядом с index.html) -->
+      <!-- BingX button: теперь использует inline SVG с фирменным градиентом;
+           если рядом с index.html есть bingx.jpg – JS попытается его загрузить и заменить SVG -->
       <div class="btn-block" onclick="window.open('https://bingx.com/partner/cryptoask/','_blank')" role="link" aria-label="BingX">
-        <!-- Логотип из локального файла -->
-        <img id="bingxImg" src="bingx.jpg" alt="BingX логотип" />
+        <div id="bingxContainer" aria-hidden="false">
+          <!-- Inline SVG логотип BingX (фирменный градиент) -->
+          <svg id="bingxLogo" class="brand-logo" viewBox="0 0 100 100" width="40" height="40" role="img" aria-label="BingX логотип">
+            <title>BingX</title>
+            <defs>
+              <linearGradient id="bingxGrad" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="var(--bingx-grad-1)"/>
+                <stop offset="0.55" stop-color="var(--bingx-grad-2)"/>
+                <stop offset="1" stop-color="var(--bingx-grad-3)"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Округлый фон с градиентом -->
+            <rect x="0" y="0" width="100" height="100" rx="20" fill="url(#bingxGrad)"></rect>
+
+            <!-- Стилизованный знак "BX" (упрощённый, контрастный) -->
+            <g transform="translate(18,12) scale(0.7)" fill="#FFFFFF" fill-opacity="0.98">
+              <!-- диалоговая форма/марка -->
+              <path d="M12 36 L32 12 L54 36 L32 60 Z"></path>
+              <path d="M64 24 L76 24 L76 40 L64 40 Z"></path>
+            </g>
+          </svg>
+        </div>
+
         <div class="btn-content">
           <span>BingX</span>
           <div class="btn-desc">Регистрация по партнёрской ссылке</div>
@@ -278,61 +309,33 @@
     function showModal(id) { document.getElementById(id).classList.add('active'); }
     function hideModal(id) { document.getElementById(id).classList.remove('active'); }
 
-    // --- BingX image fallback logic ---
+    // --- BingX logo: если рядом с index.html есть bingx.jpg, JS попробует загрузить его и заменить inline SVG.
+    // Если файл не доступен, останется встроенная SVG-версия логотипа с фирменным градиентом.
     (function(){
-      const img = document.getElementById('bingxImg');
-      if (!img) return;
-
-      // On error, replace <img> with inline SVG fallback (colorful and visible on dark bg)
-      function handleError() {
-        // create inline SVG fallback
-        const svgNS = 'http://www.w3.org/2000/svg';
-        const svg = document.createElementNS(svgNS, 'svg');
-        svg.setAttribute('viewBox', '0 0 100 100');
-        svg.setAttribute('width', '40');
-        svg.setAttribute('height', '40');
-        svg.style.borderRadius = '50%';
-        svg.style.display = 'block';
-        svg.style.padding = '4px';
-
-        svg.innerHTML = `
-          <defs>
-            <linearGradient id="bxg" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#00A6FF"/>
-              <stop offset="0.6" stop-color="#00D4FF"/>
-              <stop offset="1" stop-color="#5B3BFF"/>
-            </linearGradient>
-          </defs>
-          <rect width="100" height="100" rx="20" fill="url(#bxg)"></rect>
-          <g transform="translate(16,12) scale(0.7)">
-            <!-- stylized 'BX' mark - simple and legible -->
-            <path d="M8 32 L30 8 L52 32 L30 56 Z" fill="#fff" opacity="0.95"></path>
-            <circle cx="30" cy="28" r="6" fill="#000" opacity="0.1"></circle>
-          </g>
-        `;
-
-        img.replaceWith(svg);
-      }
-
-      img.addEventListener('error', function onErr() {
-        img.removeEventListener('error', onErr);
-        handleError();
-      });
-
-      // If the image loaded but is empty (0x0), trigger fallback after short timeout
-      setTimeout(() => {
-        try {
-          if (!img.complete || img.naturalWidth === 0) {
-            // trigger fallback
-            handleError();
-          }
-        } catch (e) {
-          // ignore, just ensure fallback
-          handleError();
-        }
-      }, 500);
+      const container = document.getElementById('bingxContainer');
+      if (!container) return;
+      const imgUrl = 'bingx.jpg'; // локальный файл рядом с index.html (опционально)
+      const testImg = new Image();
+      // small styling applied when replacing to keep same look as other icons
+      testImg.onload = function() {
+        testImg.width = 40;
+        testImg.height = 40;
+        testImg.alt = 'BingX логотип';
+        testImg.id = 'bingxImg';
+        testImg.style.borderRadius = '50%';
+        testImg.style.padding = '4px';
+        testImg.style.objectFit = 'contain';
+        testImg.className = ''; // no brand-logo class needed for raster
+        // заменяем контейнер на изображение
+        container.replaceWith(testImg);
+      };
+      testImg.onerror = function() {
+        // ничего не делаем — оставляем inline SVG с фирменным градиентом
+      };
+      // Запуск загрузки
+      testImg.src = imgUrl;
     })();
-    // --- end BingX fallback ---
+    // --- end BingX logo logic ---
   </script>
 </body>
 </html>
